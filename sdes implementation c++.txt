@@ -1,0 +1,521 @@
+#include <iostream>
+#include <string>
+#include <stdlib.h>     
+#include <time.h>       
+#include <sstream>
+using namespace std;
+
+string Key1;
+string Key2;
+string S0[4][4] = 
+{
+	{"01", "00", "11", "10"},
+	{"11", "10", "01", "00"},
+	{"00", "10", "01", "11"},
+	{"11", "01", "11", "10"}
+};
+
+string P4(string s)
+{
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	
+	s[0] = temp[1];
+	s[1] = temp[3];
+	s[2] = temp[2];
+	s[3] = temp[0];
+	return s;
+}
+
+string S1[4][4] = 
+{
+	{"00", "01", "10", "11"},
+	{"10", "00", "01", "11"},
+	{"11", "00", "01", "00"},
+	{"10", "01", "00", "11"}
+};
+
+string leftShift(string s)
+{
+	string p;
+	for(unsigned int i = 1; i < s.size(); ++i)
+	{
+		p += s[i];
+	}
+	p += s[0];
+	return p;
+}
+
+string IP(string s)
+{
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	temp[4] = s[4];
+	temp[5] = s[5];
+	temp[6] = s[6];
+	temp[7] = s[7];
+	
+	s[0] = temp[1];
+	s[1] = temp[5];
+	s[2]= temp[2];
+	s[3] = temp[0];
+	s[4] = temp[3];
+	s[5] = temp[7];
+	s[6] = temp[4];
+	s[7] = temp[6];
+	return s;
+}
+
+string inverseIP(string s)
+{
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	temp[4] = s[4];
+	temp[5] = s[5];
+	temp[6] = s[6];
+	temp[7] = s[7];
+	
+	s[0] = temp[3];
+	s[1] = temp[0];
+	s[2]= temp[2];
+	s[3] = temp[4];
+	s[4] = temp[6];
+	s[5] = temp[1];
+	s[6] = temp[7];
+	s[7] = temp[5];
+	return s;
+}
+
+string EP(string s)
+{
+	string p;
+	p = "aaaaaaaa";
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	
+	p[0] = temp[3];
+	p[1] = temp[0];
+	p[2] = temp[1];
+	p[3] = temp[2];
+	p[4] = temp[1];
+	p[5] = temp[2];
+	p[6] = temp[3];
+	p[7] = temp[0];
+	return p;
+}
+
+string P8(string s)
+{
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	temp[4] = s[4];
+	temp[5] = s[5];
+	temp[6] = s[6];
+	temp[7] = s[7];
+	temp[8] = s[8];
+	temp[9] = s[9];
+	
+	s[0] = temp[5];
+	s[1] = temp[2];
+	s[2]= temp[6];
+	s[3] = temp[3];
+	s[4] = temp[7];
+	s[5] = temp[4];
+	s[6] = temp[9];
+	s[7] = temp[8];
+	s = s.substr(0, 8);
+	return s;
+}
+
+string XOR(string s, string k)
+{
+	string p;
+	for(unsigned int i = 0; i < s.size(); ++i)
+	{
+		p += (s[i]^k[i]) ? "1" : "0";
+	}
+
+	return p;
+}
+
+
+string P10(string s)
+{
+	string temp;
+	temp[0] = s[0];
+	temp[1] = s[1];
+	temp[2] = s[2];
+	temp[3] = s[3];
+	temp[4] = s[4];
+	temp[5] = s[5];
+	temp[6] = s[6];
+	temp[7] = s[7];
+	temp[8] = s[8];
+	temp[9] = s[9];
+	
+	s[0] = temp[2];
+	s[1] = temp[4];
+	s[2] = temp[1];
+	s[3] = temp[6];
+	s[4] = temp[3];
+	s[5] = temp[9];
+	s[6] = temp[0];
+	s[7] = temp[8];
+	s[8] = temp[6];
+	s[9] = temp[5];
+	return s;
+}
+
+string generateKey()
+{
+	string s;
+	s = "1010101000";
+	return s;
+}
+
+string getKey()
+{
+	bool test = false;
+	string s;
+	while (test == false)
+	{
+		cout << "Enter key:" << endl;
+		cin >> s;
+		if (s.size() == 10)
+		test = true;
+		else 
+		{
+			test = false;
+			cout << "Must be 10 bits." << endl;
+		}
+		for (int i = 0; i < 10; i++)
+		{
+			if ((s[i] != '0') && (s[i] != '1'))
+			{
+				test = false;
+			}
+		} 
+		if (test == false)
+		{
+			cout << "Only inputs of 0 and 1 are accepted." << endl;
+		}
+	}
+	return s;
+}
+
+string testPlainText(string s)
+{
+	string plaintext;
+	plaintext = s; 
+	bool bitTest = false;
+	while (plaintext.size() != 8 || bitTest == false)
+	{
+		bitTest = true;
+		for (int i = 0; i < plaintext.size(); i++)
+		{
+			if ((plaintext[i] != '0') && (plaintext[i] != '1'))
+			bitTest = false;
+		}
+		if (plaintext.size() != 8 || bitTest == false)
+		{
+			cout << "Plaintext is 8 bits of 0 or 1: " << endl;
+			cin >> plaintext;
+		}
+	}
+	return plaintext;
+}
+
+string testKey(string s)
+{
+	string Key;
+	Key = s;
+	if (Key == "y")
+	Key = getKey();
+	else if (Key == "n")
+	{
+		 Key = generateKey();
+	}
+	else 
+	{
+		cout << "You must input y or n." << endl;
+		cin >> Key;
+		while (Key != "y" && Key != "n")
+		{
+			cout << "You must input y or n." << endl;
+			cin >> Key;
+		}
+		
+		if (Key == "y")
+		Key = getKey();
+		else if (Key == "n")
+		Key = generateKey();
+	}
+	return Key;
+}
+
+int calRow(string s)
+{
+	int row;
+	string first, second, third, fourth;
+	int firstbit, secondbit, thirdbit, fourthbit;
+	first = s[0];
+	second = s[1];
+	third = s[2];
+	fourth = s[3];
+	stringstream(first) >> firstbit;
+	stringstream(second) >> secondbit;
+	stringstream(third) >> thirdbit;
+	stringstream(fourth) >> fourthbit;
+	if (secondbit == 1)
+	secondbit = 2;
+	if (firstbit == 1)
+	firstbit = 2;
+	row = firstbit + fourthbit;
+	return row;
+}
+
+int calCol(string s)
+{
+	int col;
+	string first, second, third, fourth;
+	int firstbit, secondbit, thirdbit, fourthbit;
+	first = s[0];
+	second = s[1];
+	third = s[2];
+	fourth = s[3];
+	stringstream(first) >> firstbit;
+	stringstream(second) >> secondbit;
+	stringstream(third) >> thirdbit;
+	stringstream(fourth) >> fourthbit;
+	if (secondbit == 1)
+	secondbit = 2;
+	if (firstbit == 1)
+	firstbit = 2;
+	col = secondbit + thirdbit;
+	return col;
+}
+
+string firstRound(string plaintext, string Key)
+{
+	Key = testKey(Key);
+	Key = P10(Key);
+	string firstHalf = Key.substr(0, Key.size()/2);
+    string secondHalf = Key.substr(Key.size()/2);
+	firstHalf = leftShift(firstHalf);
+	secondHalf = leftShift(secondHalf);
+	Key = firstHalf + secondHalf;
+	Key = P8(Key);
+	Key1 = Key;
+	firstHalf = leftShift(firstHalf);
+	firstHalf = leftShift(firstHalf);
+	secondHalf = leftShift(secondHalf);
+	secondHalf = leftShift(secondHalf);
+	Key = firstHalf + secondHalf;
+	Key = P8(Key);
+	Key2 = Key;
+	plaintext = IP(plaintext);
+	string leftHalfAfterIP;
+	string rightHalfAfterIP;
+	leftHalfAfterIP = plaintext.substr(0, plaintext.size()/2);
+	rightHalfAfterIP = plaintext.substr(plaintext.size()/2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	secondHalf = EP(secondHalf);
+	plaintext = secondHalf;
+	plaintext = XOR(plaintext, Key1);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	firstHalf = plaintext.substr(0, plaintext.size()/2);
+	int row, col;
+	row = calRow(firstHalf);
+	col = calCol(firstHalf);
+	plaintext = plaintext.substr(0, 4);
+	plaintext = S0[row][col];
+	row = calRow(secondHalf);
+	col = calCol(secondHalf);
+	plaintext = plaintext + S1[row][col];
+	plaintext = P4(plaintext);
+	plaintext = XOR(plaintext, leftHalfAfterIP);
+	plaintext = plaintext + rightHalfAfterIP;
+	return plaintext;
+}
+
+string decryptfirstRound(string plaintext, string Key)
+{
+	Key = testKey(Key);
+	Key = P10(Key);
+	string firstHalf = Key.substr(0, Key.size()/2);
+    string secondHalf = Key.substr(Key.size()/2);
+	firstHalf = leftShift(firstHalf);
+	secondHalf = leftShift(secondHalf);
+	Key = firstHalf + secondHalf;
+	Key = P8(Key);
+	Key1 = Key;
+	firstHalf = leftShift(firstHalf);
+	firstHalf = leftShift(firstHalf);
+	secondHalf = leftShift(secondHalf);
+	secondHalf = leftShift(secondHalf);
+	Key = firstHalf + secondHalf;
+	Key = P8(Key);
+	Key2 = Key;
+	plaintext = IP(plaintext);
+	string leftHalfAfterIP;
+	string rightHalfAfterIP;
+	leftHalfAfterIP = plaintext.substr(0, plaintext.size()/2);
+	rightHalfAfterIP = plaintext.substr(plaintext.size()/2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	secondHalf = EP(secondHalf);
+	plaintext = secondHalf;
+	plaintext = XOR(plaintext, Key2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	firstHalf = plaintext.substr(0, plaintext.size()/2);
+	int row, col;
+	row = calRow(firstHalf);
+	col = calCol(firstHalf);
+	plaintext = plaintext.substr(0, 4);
+	plaintext = S0[row][col];
+	row = calRow(secondHalf);
+	col = calCol(secondHalf);
+	plaintext = plaintext + S1[row][col];
+	plaintext = P4(plaintext);
+	plaintext = XOR(plaintext, leftHalfAfterIP);
+	plaintext = plaintext + rightHalfAfterIP;
+	return plaintext;
+}
+
+string decryptsecondRound(string plaintext, string Key)
+{
+	string secondHalf, firstHalf;
+	string leftHalfAfterIP;
+	string rightHalfAfterIP;
+	leftHalfAfterIP = plaintext.substr(0, plaintext.size()/2);
+	rightHalfAfterIP = plaintext.substr(plaintext.size()/2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	secondHalf = EP(secondHalf);
+	plaintext = secondHalf;
+	plaintext = XOR(plaintext, Key1);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	firstHalf = plaintext.substr(0, plaintext.size()/2);
+	int row, col;
+	row = calRow(firstHalf);
+	col = calCol(firstHalf);
+	plaintext = plaintext.substr(0, 4);
+	plaintext = S0[row][col];
+	row = calRow(secondHalf);
+	col = calCol(secondHalf);
+	plaintext = plaintext + S1[row][col];
+	plaintext = P4(plaintext);
+	plaintext = XOR(plaintext, leftHalfAfterIP);
+	plaintext = plaintext + rightHalfAfterIP;
+	plaintext = inverseIP(plaintext);
+	return plaintext;
+}
+
+string secondRound(string plaintext, string Key)
+{
+	string secondHalf, firstHalf;
+	string leftHalfAfterIP;
+	string rightHalfAfterIP;
+	leftHalfAfterIP = plaintext.substr(0, plaintext.size()/2);
+	rightHalfAfterIP = plaintext.substr(plaintext.size()/2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	secondHalf = EP(secondHalf);
+	plaintext = secondHalf;
+	plaintext = XOR(plaintext, Key2);
+	secondHalf = plaintext.substr(plaintext.size()/2);
+	firstHalf = plaintext.substr(0, plaintext.size()/2);
+	int row, col;
+	row = calRow(firstHalf);
+	col = calCol(firstHalf);
+	plaintext = plaintext.substr(0, 4);
+	plaintext = S0[row][col];
+	row = calRow(secondHalf);
+	col = calCol(secondHalf);
+	plaintext = plaintext + S1[row][col];
+	plaintext = P4(plaintext);
+	plaintext = XOR(plaintext, leftHalfAfterIP);
+	plaintext = plaintext + rightHalfAfterIP;
+	plaintext = inverseIP(plaintext);
+	return plaintext;
+}
+
+string flip(string s)
+{
+	string newS;
+	string firstHalf, secondHalf;
+	secondHalf = s.substr(s.size()/2);
+	firstHalf = s.substr(0, s.size()/2);
+	newS = secondHalf;
+	newS = secondHalf + firstHalf;
+	return newS;
+}
+
+int main()
+{
+	bool flag;
+	flag = false;
+	while (flag == false)
+	{
+		string ans;
+		cout << "1 for encyption, 2 for decryption: ";
+		cin >> ans;
+		while (ans != "1" && ans != "2")
+		{
+			cout << "Incorrect input. 1 or 2: ";
+			cin >> ans;
+		}
+		if (ans == "1")
+		{
+		string afterFirst;
+		string plaintext;
+		cout << "Enter plaintext (enter 0 to exit): " << endl;
+		cin >> plaintext;
+		if (plaintext == "0")
+		break;
+		else
+		plaintext = testPlainText(plaintext);
+		string Key;
+		cout << "Press y for manual key input, n for randomly generated:" << endl;
+		cin >> Key;
+		afterFirst = firstRound(plaintext, Key);
+		afterFirst = flip(afterFirst);
+		afterFirst = secondRound(afterFirst, Key);
+		cout << "Ciphertext output: " << afterFirst << endl <<
+		"--------------------------------------------"
+		<< endl;
+		}
+		else if (ans == "2")
+		{
+		string afterFirst;
+		string plaintext;
+		cout << "Enter ciphertext (enter 0 to exit): " << endl;
+		cin >> plaintext;
+		if (plaintext == "0")
+		break;
+		else
+		plaintext = testPlainText(plaintext);
+		string Key;
+		cout << "Press y for manual key input, n for randomly generated:" << endl;
+		cin >> Key;
+		afterFirst = decryptfirstRound(plaintext, Key);
+		afterFirst = flip(afterFirst);
+		afterFirst = decryptsecondRound(afterFirst, Key);
+		cout << "Plaintext output: " << afterFirst << endl << 
+		"--------------------------------------------"
+		<< endl;
+		}
+	}
+}
